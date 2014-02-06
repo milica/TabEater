@@ -6,7 +6,7 @@
     "version": "1.0",
 
     "browser_action": {
-        "default_icon": "images/icon.png",
+        "default_icon": "images/crazy_chicken_full.png",
         "default_title": "TabEater"
     },
     "options_page": "options.html",
