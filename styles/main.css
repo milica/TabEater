@@ -1,0 +1,96 @@
+body{
+    background-color: #eee;
+    margin: 0;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+.container {
+    font-family: Arial, verdana, tahoma, sans-serif;
+    margin: 0 auto;
+    width: 80%;
+}
+
+/* heading */
+h2{
+    display:inline-block;
+    margin-left: 2.5%;
+    font-size: 20px;
+    margin-bottom: 5px;
+}
+
+/* form containers */
+.opt-form {
+    padding: 10px;
+    background-color: #ffffff;
+    overflow: hidden;
+}
+
+#url-list {
+    margin: 0 auto;
+    padding: 10px;
+}
+
+/* input containers */
+#url-list > div:last-of-type {
+margin-bottom: 0;
+}
+
+.input-container {
+margin-bottom: 10px;
+}
+
+input[type=url]{
+width: 85%;
+height: 30px;
+border-radius: 3px;
+border: 1px solid #ddd;
+padding-left: 10px;
+}
+
+input[type=url]:hover {
+border: 1px solid #ccc;
+}
+
+/* buttons */
+.remove{
+    width: 14%;
+    height: 30px;
+    background-color: #dd5e57;
+    border-radius: 5px;
+    border: none;
+    color: #eee;
+}
+
+.remove:hover {
+    background-color: #c06052;
+    cursor: pointer;
+}
+
+.green {
+    display: inline-block;
+    height: 30px;
+    border-radius: 5px;
+    background-color: #5dd16a;
+    border: none;
+    color: #fff;
+}
+
+.green:hover {
+    background-color: #53b65b;
+    cursor: pointer;
+}
+
+#add-new{
+    height: 20px;
+}
+
+#save {
+    margin-top: 15px;
+    margin-right: 2.5%;
+    float: right;
+    width: 100px;
+    font-weight: bold;
+}
