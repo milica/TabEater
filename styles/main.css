@@ -11,6 +11,8 @@ body{
     font-family: Arial, verdana, tahoma, sans-serif;
     margin: 0 auto;
     width: 80%;
+    max-width: 850px;
+    background-color: #ffffff;
 }
 
 /* heading */
@@ -19,6 +21,7 @@ h2{
     margin-left: 2.5%;
     font-size: 20px;
     margin-bottom: 5px;
+    margin-right: 20px;
 }
 
 /* form containers */
@@ -69,6 +72,7 @@ border: 1px solid #ccc;
 }
 
 .green {
+    font-weight: bold;
     display: inline-block;
     height: 30px;
     border-radius: 5px;
@@ -83,9 +87,11 @@ border: 1px solid #ccc;
 }
 
 .icon-button{
-    height: 23px;
-    width: 23px;
     font-weight: bold;
+    font-size: 18px;
+    height: 28px;
+    width: 28px;
+    margin-left: 5px;
 }
 
 #save {
@@ -93,5 +99,4 @@ border: 1px solid #ccc;
     margin-right: 2.5%;
     float: right;
     width: 100px;
-    font-weight: bold;
 }
