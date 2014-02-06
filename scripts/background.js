@@ -18,10 +18,10 @@ if ('undefined' == typeof(tab.eater)) {
                 var urls = obj["TE.urls"], url, tabsToRemove = [];
                 for (url in urls) {
                     for (tab in tabs) {
-                        if (tab.url.indexOf(url) === -1) {
+                        if (tabs[tab].url.indexOf(urls[url]) === -1) {
                             continue;
                         } else {
-                            tabsToRemove.push(tab.id);
+                            tabsToRemove.push(tabs[tab].id);
                         }
                     }
                 }
@@ -53,9 +53,6 @@ if ('undefined' == typeof(tab.eater)) {
                 } else {
                     return;
                 }
-            },
-            registerCurrentWindow: function (window) {
-                $private.currentWindow = window;
             }
         };
 
@@ -64,4 +61,3 @@ if ('undefined' == typeof(tab.eater)) {
 }
 
 chrome.browserAction.onClicked.addListener(tab.eater.onClicked);
-//chrome.windows.getCurrent(tab.eater.registerCurrentWindow);
