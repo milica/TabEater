@@ -1,23 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
     <title>TabEater Options</title>
 </head>
-<body>
-    <h1>Options</h1>
-
+<body class="options">
+<div class="container">
     <div class="opt-form">
 
         <h2>TabEater Blacklist</h2>
 
-        <div id="url-list">
-        </div>
+        <button type="button" class="green icon-button" id="add-new">&#43;</button>
+
+        <div id="url-list"></div>
 
         <div id="status"></div>
-        <button type="submit" id="save">Save</button>
+        <button type="submit" class="green" id="save">SAVE</button>
 
     </div>
 
+</div>
+    <link type="text/css" rel="stylesheet" href="styles/main.css">
     <script type="text/javascript" src="scripts/options.js"></script>
 </body>
 </html>
