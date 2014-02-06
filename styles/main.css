@@ -6,6 +6,10 @@ body {
 * {
     box-sizing: border-box;
 }
+:before, :after {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
 
 .container {
     font-family: Arial, verdana, tahoma, sans-serif;
@@ -13,7 +17,8 @@ body {
     padding: 10px;
     width: 80%;
     max-width: 850px;
-    background-color: #ffffff;
+    background-color: #fff;
+    box-shadow: 0 0 10px 1px #ccc;
 }
 
 /* heading */
@@ -49,13 +54,16 @@ input[type=url]{
     border-radius: 3px;
     -webkit-border-radius: 3px;
     border: 1px solid #ddd;
-    height: 36px;
+    height: 37px;
     padding: 2px 0 2px 10px;
     font-size: 14px;
     margin: 2px 0;
 }
 
-input[type=url]:hover {
+input[type=url]:hover,
+input[type=url]:focus,
+input[type=url]:active {
+    outline: none;
     border: 1px solid #ccc;
 }
 
@@ -101,6 +109,19 @@ button:active, button:focus {
     font-weight: bold;
     font-size: 18px;
     margin-left: 5px;
+}
+
+#add-new {
+    position: relative;
+    padding-left: 35px;
+}
+
+#add-new:before {
+    content: "\2b";
+    font-size: 30px;
+    position: absolute;
+    top: 0px;
+    left: 10px;
 }
 
 #save {
