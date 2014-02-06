@@ -1,10 +1,10 @@
 {
-    "background": {
-        "persistent": false,
-        "scripts": [ "scripts/background.js" ]
-    },
-
     "manifest_version": 2,
+
+    "background": {
+        "scripts": [ "scripts/background.js" ],
+        "persistent": false
+    },
 
     "name": "TabEater",
     "description": "The extension that eats tabs :)",
