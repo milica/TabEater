@@ -1,4 +1,4 @@
-body{
+body {
     background-color: #eee;
     margin: 0;
 }
@@ -10,18 +10,17 @@ body{
 .container {
     font-family: Arial, verdana, tahoma, sans-serif;
     margin: 0 auto;
+    padding: 10px;
     width: 80%;
     max-width: 850px;
     background-color: #ffffff;
 }
 
 /* heading */
-h2{
+h2 {
     display:inline-block;
-    margin-left: 2.5%;
     font-size: 20px;
-    margin-bottom: 5px;
-    margin-right: 20px;
+    margin: 10px 20px 10px 0;
 }
 
 /* form containers */
@@ -32,71 +31,97 @@ h2{
 }
 
 #url-list {
-    margin: 0 auto;
-    padding: 10px;
+    margin: 20px 0;
 }
 
 /* input containers */
 #url-list > div:last-of-type {
-margin-bottom: 0;
+    margin-bottom: 0;
 }
 
 .input-container {
-margin-bottom: 10px;
+    margin: 10px 0;
+    overflow: auto;
 }
 
 input[type=url]{
-width: 94%;
-height: 30px;
-border-radius: 3px;
-border: 1px solid #ddd;
-padding-left: 10px;
+    width: 93%;
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border: 1px solid #ddd;
+    height: 36px;
+    padding: 2px 0 2px 10px;
+    font-size: 14px;
+    margin: 2px 0;
 }
 
 input[type=url]:hover {
-border: 1px solid #ccc;
+    border: 1px solid #ccc;
 }
 
 /* buttons */
-.remove{
-    height: 30px;
-    background-color: #dd5e57;
+button {
+    font-family: Arial, verdana, tahoma, sans-serif;
     border-radius: 5px;
+    -webkit-border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    display: inline-block;
     border: none;
+    padding: 10px;
+}
+button:disabled {
+    opacity: 0;
+}
+button:active, button:focus {
+    outline: none;
+}
+
+.remove {
+    float: right;
+    padding: 8px 15px;
+    background-color: #dd5e57;
     color: #eee;
 }
 
 .remove:hover {
     background-color: #c06052;
-    cursor: pointer;
 }
 
 .green {
     font-weight: bold;
-    display: inline-block;
-    height: 30px;
-    border-radius: 5px;
     background-color: #5dd16a;
-    border: none;
-    color: #fff;
 }
 
 .green:hover {
     background-color: #53b65b;
-    cursor: pointer;
 }
 
-.icon-button{
+.icon-button {
     font-weight: bold;
     font-size: 18px;
-    height: 28px;
-    width: 28px;
+    /*height: 28px;*/
+    /*width: 28px;*/
     margin-left: 5px;
 }
 
 #save {
-    margin-top: 15px;
-    margin-right: 2.5%;
     float: right;
-    width: 100px;
+    padding: 10px 20px;
+    font-size: 14px;
+}
+
+.save-action {
+    overflow: auto;
+}
+
+#status {
+    float: left;
+    padding: 10px 0;
+    color: #666;
+}
+
+#status.saved {
+    color: #076825;
+    padding: 10px;
 }

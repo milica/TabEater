@@ -26,7 +26,7 @@ var Options = {
      */
     add: '',
 
-    emptyText: "There are not blacklisted urls. Click on the + icon to add urls to your list.",
+    emptyText: "There are not blacklisted urls. Click ADD URL button to add urls to your list.",
 
     /**
      * Prepare elements for interaction
@@ -51,7 +51,7 @@ var Options = {
 
         var urls = localStorage["TE.urls"];
 
-        if (!urls || urls.length) {
+        if (!urls || urls === '[]') {
 
             Options.status.innerText = Options.emptyText;
             Options.save.setAttribute("disabled", "disabled");
@@ -95,13 +95,15 @@ var Options = {
             localStorage["TE.urls"] = JSON.stringify(urls);
 
             Options.urls = urls;
-            Options.status.innerText = "Url list is saved.";
+            Options.status.innerText = "Your changes have been saved.";
+            Options.status.className = "saved";
             Options.form.innerHTML = "";
             Options.getUrls();
 
             setTimeout(function() {
                 Options.status.innerText = "";
-            }, 2000);
+                Options.status.className = "";
+            }, 3000);
 
         }
 
@@ -159,6 +161,7 @@ var Options = {
         var input = document.createElement('input');
         input.type = 'url';
         input.value = url;
+        input.setAttribute('placeholder', 'Type your url here...');
 
         var remove = document.createElement('button');
         remove.innerHTML = '&times;';
