@@ -13,8 +13,8 @@ var Options = {
 
         Options.form = document.getElementById("url-list");
         Options.status = document.getElementById("status");
-        Options.save = document.querySelector("#save-urls");
-        Options.add = document.querySelector("#add-url");
+        Options.save = document.querySelector("#save");
+        Options.add = document.querySelector("#add-new");
 
         Options.save.addEventListener('click', Options.saveUrls);
         Options.add.addEventListener('click', Options.addUrl);
@@ -92,13 +92,14 @@ var Options = {
         url = (url === undefined) ? '' : url;
 
         var child = document.createElement('div');
+        child.className = 'input-container';
 
         var input = document.createElement('input');
-        input.type = 'text';
+        input.type = 'url';
         input.value = url;
 
         var remove = document.createElement('button');
-        remove.innerText = '-';
+        remove.innerText = 'Remove';
         remove.className = 'remove';
 
         remove.addEventListener('click', Options.removeUrl);
