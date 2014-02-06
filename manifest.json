@@ -15,6 +15,9 @@
         "default_title": "TabEater"
     },
     "options_page": "options.html",
-    "permissions": [ "tabs" ]
+    "permissions": [
+        "tabs",
+        "storage"
+    ]
 
 }

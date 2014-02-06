@@ -1,3 +1,5 @@
+'use strict';
+
 var Options = {
     init: function () {
 
@@ -6,7 +8,7 @@ var Options = {
 
     },
     /**
-     * Url list populated from the localStorage once the app is initiated
+     * Url list populated from the chrome storage once the app is initiated
      */
     urls: [],
     /**
@@ -43,34 +45,35 @@ var Options = {
 
     },
     /**
-     * Get urls form localStorage and generate HTML structure
-     * Namespace for the localStorage is TE
+     * Get urls form chrome storage and generate HTML structure
+     * Namespace for the storage is is TE
      * @returns {*}
      */
     setUrls: function () {
 
-        var urls = localStorage["TE.urls"];
+        chrome.storage.sync.get('TE.urls', function(obj) {
 
-        if (!urls || urls === '[]') {
+            var urls = obj["TE.urls"];
 
-            Options.status.innerText = Options.emptyText;
-            Options.save.setAttribute("disabled", "disabled");
+            if (!urls || urls.length === 0) {
 
-            return;
-        }
+                Options.status.innerText = Options.emptyText;
+                Options.save.setAttribute("disabled", "disabled");
 
-        urls = JSON.parse(urls);
+                return;
+            }
 
-        for (var i = 0; i < urls.length; i++) {
+            for (var i = 0; i < urls.length; i++) {
 
-            var child = Options.createChild(urls[i]);
+                var child = Options.createChild(urls[i]);
 
-            Options.form.appendChild(child);
-        }
+                Options.form.appendChild(child);
+            }
 
-        Options.urls = urls;
+            Options.urls = urls;
 
-        return urls;
+        });
+
     },
     /**
      * Get urls
@@ -82,7 +85,7 @@ var Options = {
 
     },
     /**
-     * Save urls into localStorage
+     * Save urls into chrome storage
      */
     saveUrls: function () {
 
@@ -100,19 +103,21 @@ var Options = {
         }
 
         if (urls.length > 0) {
-            // save to LS
-            localStorage["TE.urls"] = JSON.stringify(urls);
 
-            Options.urls = urls;
-            Options.status.innerText = "Your changes have been saved.";
-            Options.status.className = "saved";
-            Options.form.innerHTML = "";
-            Options.setUrls();
+            chrome.storage.sync.set({'TE.urls': urls}, function() {
 
-            setTimeout(function() {
-                Options.status.innerText = "";
-                Options.status.className = "";
-            }, 3000);
+                Options.urls = urls;
+                Options.status.innerText = "Your changes have been saved.";
+                Options.status.className = "saved";
+                Options.form.innerHTML = "";
+                Options.setUrls();
+
+                setTimeout(function() {
+                    Options.status.innerText = "";
+                    Options.status.className = "";
+                }, 3000);
+
+            });
 
         }
 
@@ -133,7 +138,7 @@ var Options = {
 
     },
     /**
-     * Remove url from the localStorage and from the list
+     * Remove url from the chrome storage and from the list
      * @param e
      */
     removeUrl: function (e) {
@@ -143,16 +148,19 @@ var Options = {
         var input = holder.children[0];
 
         Options.urls.splice(Options.urls.indexOf(input.value), 1);
-        localStorage["TE.urls"] = JSON.stringify(Options.urls);
 
-        Options.form.removeChild(holder);
+        chrome.storage.sync.set({'TE.urls': Options.urls}, function() {
 
-        button.removeEventListener('click', Options.removeUrl, false);
+            Options.form.removeChild(holder);
 
-        if (Options.form.children.length === 0) {
-            Options.status.innerText = Options.emptyText;
-            Options.save.setAttribute("disabled", "disabled");
-        }
+            button.removeEventListener('click', Options.removeUrl, false);
+
+            if (Options.form.children.length === 0) {
+                Options.status.innerText = Options.emptyText;
+                Options.save.setAttribute("disabled", "disabled");
+            }
+
+        });
 
     },
     /**
