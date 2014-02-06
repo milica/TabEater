@@ -55,13 +55,11 @@ var Options = {
 
             var url = children[i].children[0].value;
 
-            console.log(urls.indexOf(url));
             if (url !== '' && urls.indexOf(url) === -1) {
                 urls.push(url);
             }
         }
 
-        console.log(urls);
         if (urls.length > 0) {
             localStorage["TE.urls"] = JSON.stringify(urls);
 
@@ -72,6 +70,9 @@ var Options = {
             setTimeout(function() {
                 Options.status.innerText = "";
             }, 2000);
+
+            Options.form.innerHTML = "";
+            Options.getUrls();
         }
 
     },
@@ -114,6 +115,11 @@ var Options = {
 
         var button = e.target;
         var holder = button.parentNode;
+        var input = holder.children[0];
+
+        Options.urls.splice(Options.urls.indexOf(input.value), 1);
+        localStorage["TE.urls"] = JSON.stringify(Options.urls);
+
 
         Options.form.removeChild(holder);
 
