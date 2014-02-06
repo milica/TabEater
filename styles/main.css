@@ -100,8 +100,6 @@ button:active, button:focus {
 .icon-button {
     font-weight: bold;
     font-size: 18px;
-    /*height: 28px;*/
-    /*width: 28px;*/
     margin-left: 5px;
 }
 

@@ -2,7 +2,7 @@ var Options = {
     init: function () {
 
         Options.prepareElements();
-        Options.getUrls();
+        Options.setUrls();
 
     },
     /**
@@ -47,7 +47,7 @@ var Options = {
      * Namespace for the localStorage is TE
      * @returns {*}
      */
-    getUrls: function () {
+    setUrls: function () {
 
         var urls = localStorage["TE.urls"];
 
@@ -71,6 +71,15 @@ var Options = {
         Options.urls = urls;
 
         return urls;
+    },
+    /**
+     * Get urls
+     * @returns {*}
+     */
+    getUrls: function () {
+
+        return Options.urls;
+
     },
     /**
      * Save urls into localStorage
@@ -98,7 +107,7 @@ var Options = {
             Options.status.innerText = "Your changes have been saved.";
             Options.status.className = "saved";
             Options.form.innerHTML = "";
-            Options.getUrls();
+            Options.setUrls();
 
             setTimeout(function() {
                 Options.status.innerText = "";
