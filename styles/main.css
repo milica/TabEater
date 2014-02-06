@@ -14,16 +14,17 @@ body{
 }
 
 /* heading */
-h2{
+h2 {
     display:inline-block;
-    margin-left: 2.5%;
+    /*margin-left: 2.5%;*/
+    margin: 0 20px 0 0;
     font-size: 20px;
-    margin-bottom: 5px;
+    /*margin-bottom: 5px;*/
 }
 
 /* form containers */
 .opt-form {
-    padding: 10px;
+    padding: 20px;
     background-color: #ffffff;
     overflow: hidden;
 }
@@ -55,43 +56,47 @@ border: 1px solid #ccc;
 }
 
 /* buttons */
-.remove{
-    height: 30px;
-    background-color: #dd5e57;
+button {
+    font-family: Arial, verdana, tahoma, sans-serif;
     border-radius: 5px;
+    -webkit-border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    display: inline-block;
     border: none;
-    color: #eee;
+}
+button:disabled {
+    opacity: 0.7;
+}
+.remove {
+    background-color: #dd5e57;
 }
 
 .remove:hover {
     background-color: #c06052;
-    cursor: pointer;
 }
 
 .green {
-    display: inline-block;
-    height: 30px;
-    border-radius: 5px;
     background-color: #5dd16a;
-    border: none;
-    color: #fff;
 }
 
 .green:hover {
     background-color: #53b65b;
-    cursor: pointer;
 }
 
-.icon-button{
+.icon-button {
     height: 23px;
     width: 23px;
     font-weight: bold;
 }
 
 #save {
-    margin-top: 15px;
-    margin-right: 2.5%;
     float: right;
-    width: 100px;
-    font-weight: bold;
+    padding: 10px 20px;
+    font-size: 14px;
+}
+
+#status {
+    padding: 10px 0;
+    color: #666;
 }
