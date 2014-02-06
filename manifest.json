@@ -1,16 +1,12 @@
 {
     "manifest_version": 2,
 
-    "name": "One-click Kittens",
-    "description": "This extension demonstrates a browser action with kittens.",
+    "name": "TabEater",
+    "description": "The extension that eats tabs :)",
     "version": "1.0",
 
-    "permissions": [
-        "https://secure.flickr.com/"
-    ],
     "browser_action": {
         "default_icon": "images/icon.png"
-        //"default_popup": "popup.html"
     },
     "options_page": "options.html",
     "permissions": [ "tabs" ]
