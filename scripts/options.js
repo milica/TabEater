@@ -1,15 +1,37 @@
 var Options = {
     init: function () {
 
-        Options.setElements();
+        Options.prepareElements();
         Options.getUrls();
 
     },
+    /**
+     * Url list populated from the localStorage once the app is initiated
+     */
     urls: [],
+    /**
+     * Reference to the form element
+     */
     form: '',
+    /**
+     * Reference to the status element
+     */
     status: '',
+    /**
+     * Reference to the save button
+     */
     save: '',
-    setElements: function () {
+    /**
+     * Reference to the add button
+     */
+    add: '',
+
+    emptyText: "There are not blacklisted urls. Click on the + icon to add urls to your list.",
+
+    /**
+     * Prepare elements for interaction
+     */
+    prepareElements: function () {
 
         Options.form = document.getElementById("url-list");
         Options.status = document.getElementById("status");
@@ -20,23 +42,28 @@ var Options = {
         Options.add.addEventListener('click', Options.addUrl);
 
     },
+    /**
+     * Get urls form localStorage and generate HTML structure
+     * Namespace for the localStorage is TE
+     * @returns {*}
+     */
     getUrls: function () {
+
         var urls = localStorage["TE.urls"];
 
-        if (!urls) {
+        if (!urls || urls.length) {
 
-            Options.status.innerText = "You don't have blacklisted urls.";
+            Options.status.innerText = Options.emptyText;
             Options.save.setAttribute("disabled", "disabled");
 
             return;
         }
+
         urls = JSON.parse(urls);
 
         for (var i = 0; i < urls.length; i++) {
 
-            var url = urls[i];
-
-            var child = Options.createChild(url);
+            var child = Options.createChild(urls[i]);
 
             Options.form.appendChild(child);
         }
@@ -45,37 +72,43 @@ var Options = {
 
         return urls;
     },
+    /**
+     * Save urls into localStorage
+     */
     saveUrls: function () {
 
         var children = Options.form.children;
-        var length = children.length;
         var urls = [];
 
-        for (var i = 0; i < length; i++) {
+        for (var i = 0; i < children.length; i++) {
 
             var url = children[i].children[0].value;
 
+            // check if url is empty string or if it exists
             if (url !== '' && urls.indexOf(url) === -1) {
                 urls.push(url);
             }
         }
 
         if (urls.length > 0) {
+            // save to LS
             localStorage["TE.urls"] = JSON.stringify(urls);
 
             Options.urls = urls;
-
-            Options.status.innerText = "Options Saved.";
+            Options.status.innerText = "Url list is saved.";
+            Options.form.innerHTML = "";
+            Options.getUrls();
 
             setTimeout(function() {
                 Options.status.innerText = "";
             }, 2000);
 
-            Options.form.innerHTML = "";
-            Options.getUrls();
         }
 
     },
+    /**
+     * Add url input holder
+     */
     addUrl: function () {
 
         var child = Options.createChild();
@@ -88,6 +121,34 @@ var Options = {
         }
 
     },
+    /**
+     * Remove url from the localStorage and from the list
+     * @param e
+     */
+    removeUrl: function (e) {
+
+        var button = e.target;
+        var holder = button.parentNode;
+        var input = holder.children[0];
+
+        Options.urls.splice(Options.urls.indexOf(input.value), 1);
+        localStorage["TE.urls"] = JSON.stringify(Options.urls);
+
+        Options.form.removeChild(holder);
+
+        button.removeEventListener('click', Options.removeUrl, false);
+
+        if (Options.form.children.length === 0) {
+            Options.status.innerText = Options.emptyText;
+            Options.save.setAttribute("disabled", "disabled");
+        }
+
+    },
+    /**
+     * Create child for the url list
+     * @param url
+     * @returns {HTMLElement}
+     */
     createChild: function (url) {
 
         url = (url === undefined) ? '' : url;
@@ -109,26 +170,6 @@ var Options = {
         child.appendChild(remove);
 
         return child;
-
-    },
-    removeUrl: function (e) {
-
-        var button = e.target;
-        var holder = button.parentNode;
-        var input = holder.children[0];
-
-        Options.urls.splice(Options.urls.indexOf(input.value), 1);
-        localStorage["TE.urls"] = JSON.stringify(Options.urls);
-
-
-        Options.form.removeChild(holder);
-
-        button.removeEventListener('click', Options.removeUrl, false);
-
-        if (Options.form.children.length === 0) {
-            Options.status.innerText = "You don't have blacklisted urls.";
-            Options.save.setAttribute("disabled", "disabled");
-        }
 
     }
 };
