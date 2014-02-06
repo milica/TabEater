@@ -3,21 +3,36 @@
 <head>
     <title>TabEater Options</title>
 </head>
-<body>
-    <h1>Options</h1>
-
+<body class="options">
+<div class="container">
     <div class="opt-form">
 
         <h2>TabEater Blacklist</h2>
 
+        <button type="button" class="green" id="add-new">&#43;</button>
+
         <div id="url-list">
+            <div class="input-container">
+                <input type="url" value="http://www.facebook.com"/>
+                <button type="button" class="remove">Remove</button>
+            </div>
+            <div class="input-container">
+                <input type="url" value="http://www.youtube.com"/>
+                <button type="button" class="remove">Remove</button>
+            </div>
+            <div class="input-container">
+                <input type="url" value="http://www.twitter.com"/>
+                <button type="button" class="remove">Remove</button>
+            </div>
         </div>
 
         <div id="status"></div>
-        <button type="submit" id="save">Save</button>
+        <button type="submit" class="green" id="save">SAVE</button>
 
     </div>
 
+</div>
+    <link type="text/css" rel="stylesheet" href="styles/main.css">
     <script type="text/javascript" src="scripts/options.js"></script>
 </body>
 </html>
