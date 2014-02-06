@@ -25,7 +25,7 @@ var Options = {
 
         if (!urls) {
 
-            Options.status.innerHTML = "You don't have blacklisted urls.";
+            Options.status.innerText = "You don't have blacklisted urls.";
             Options.save.setAttribute("disabled", "disabled");
 
             return;
@@ -67,10 +67,10 @@ var Options = {
 
             Options.urls = urls;
 
-            Options.status.innerHTML = "Options Saved.";
+            Options.status.innerText = "Options Saved.";
 
             setTimeout(function() {
-                Options.status.innerHTML = "";
+                Options.status.innerText = "";
             }, 2000);
         }
 
@@ -82,7 +82,7 @@ var Options = {
         Options.form.appendChild(child);
 
         if (Options.form.children.length === 1) {
-            Options.status.innerHTML = "";
+            Options.status.innerText = "";
             Options.save.removeAttribute("disabled");
         }
 
@@ -99,8 +99,8 @@ var Options = {
         input.value = url;
 
         var remove = document.createElement('button');
-        remove.innerText = 'Remove';
-        remove.className = 'remove';
+        remove.innerHTML = '&times;';
+        remove.className = 'remove icon-button';
 
         remove.addEventListener('click', Options.removeUrl);
 
@@ -120,7 +120,7 @@ var Options = {
         button.removeEventListener('click', Options.removeUrl, false);
 
         if (Options.form.children.length === 0) {
-            Options.status.innerHTML = "You don't have blacklisted urls.";
+            Options.status.innerText = "You don't have blacklisted urls.";
             Options.save.setAttribute("disabled", "disabled");
         }
 
