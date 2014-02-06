@@ -1,197 +1,227 @@
 'use strict';
 
-var Options = {
-    init: function () {
+if ('undefined' == typeof(TabEater)) {
+    var TabEater = {};
+}
 
-        Options.prepareElements();
-        Options.setUrls();
+if ('undefined' == typeof(TabEater.options)) {
+    TabEater.options = function() {
 
-    },
-    /**
-     * Url list populated from the chrome storage once the app is initiated
-     */
-    urls: [],
-    /**
-     * Reference to the form element
-     */
-    form: '',
-    /**
-     * Reference to the status element
-     */
-    status: '',
-    /**
-     * Reference to the save button
-     */
-    save: '',
-    /**
-     * Reference to the add button
-     */
-    add: '',
+        var $private = {};
 
-    emptyText: "There are not blacklisted urls. Click ADD URL button to add urls to your list.",
+        $private.init = function () {
 
-    /**
-     * Prepare elements for interaction
-     */
-    prepareElements: function () {
+            $private.prepareElements();
+            $private.setUrls();
 
-        Options.form = document.getElementById("url-list");
-        Options.status = document.getElementById("status");
-        Options.save = document.querySelector("#save");
-        Options.add = document.querySelector("#add-new");
+        };
 
-        Options.save.addEventListener('click', Options.saveUrls);
-        Options.add.addEventListener('click', Options.addUrl);
+        /**
+         * Url list populated from the chrome storage once the app is initiated
+         */
+        $private.urls = [];
 
-    },
-    /**
-     * Get urls form chrome storage and generate HTML structure
-     * Namespace for the storage is is TE
-     * @returns {*}
-     */
-    setUrls: function () {
+        /**
+         * Reference to the form element
+         */
+        $private.form = '';
 
-        chrome.storage.sync.get('TE.urls', function(obj) {
+        /**
+         * Reference to the status element
+         */
+        $private.status =  '';
 
-            var urls = obj["TE.urls"];
+        /**
+         * Reference to the save button
+         */
+        $private.save =  '';
 
-            if (!urls || urls.length === 0) {
+        /**
+         * Reference to the add button
+         */
+        $private.add =  '';
 
-                Options.status.innerText = Options.emptyText;
-                Options.save.setAttribute("disabled", "disabled");
+        $private.emptyText =  "There are not blacklisted urls. Click ADD URL button to add urls to your list.";
 
-                return;
-            }
+        /**
+         * Prepare elements for interaction
+         */
+        $private.prepareElements = function () {
 
-            for (var i = 0; i < urls.length; i++) {
+            $private.form = document.getElementById("url-list");
+            $private.status = document.getElementById("status");
+            $private.save = document.querySelector("#save");
+            $private.add = document.querySelector("#add-new");
 
-                var child = Options.createChild(urls[i]);
+            $private.save.addEventListener('click', $private.saveUrls);
+            $private.add.addEventListener('click', $private.addUrl);
 
-                Options.form.appendChild(child);
-            }
+        };
 
-            Options.urls = urls;
+        /**
+         * Get urls form chrome storage and generate HTML structure
+         * Namespace for the storage is is TE
+         * @returns {*}
+         */
+        $private.setUrls = function () {
 
-        });
+            chrome.storage.sync.get('TE.urls', function(obj) {
 
-    },
-    /**
-     * Get urls
-     * @returns {*}
-     */
-    getUrls: function () {
+                var urls = obj["TE.urls"];
 
-        return Options.urls;
+                if (!urls || urls.length === 0) {
 
-    },
-    /**
-     * Save urls into chrome storage
-     */
-    saveUrls: function () {
+                    $private.status.innerText = $private.emptyText;
+                    $private.save.setAttribute("disabled", "disabled");
 
-        var children = Options.form.children;
-        var urls = [];
+                    return;
+                }
 
-        for (var i = 0; i < children.length; i++) {
+                for (var i = 0; i < urls.length; i++) {
 
-            var url = children[i].children[0].value;
+                    var child = $private.createChild(urls[i]);
 
-            // check if url is empty string or if it exists
-            if (url !== '' && urls.indexOf(url) === -1) {
-                urls.push(url);
-            }
-        }
+                    $private.form.appendChild(child);
+                }
 
-        if (urls.length > 0) {
-
-            chrome.storage.sync.set({'TE.urls': urls}, function() {
-
-                Options.urls = urls;
-                Options.status.innerText = "Your changes have been saved.";
-                Options.status.className = "saved";
-                Options.form.innerHTML = "";
-                Options.setUrls();
-
-                setTimeout(function() {
-                    Options.status.innerText = "";
-                    Options.status.className = "";
-                }, 3000);
+                $private.urls = urls;
 
             });
 
-        }
+        };
 
-    },
-    /**
-     * Add url input holder
-     */
-    addUrl: function () {
+        /**
+         * Get urls
+         * @returns {*}
+         */
+        $private.getUrls = function () {
 
-        var child = Options.createChild();
+            return $private.urls;
 
-        Options.form.appendChild(child);
+        };
 
-        if (Options.form.children.length === 1) {
-            Options.status.innerText = "";
-            Options.save.removeAttribute("disabled");
-        }
+        /**
+         * Save urls into chrome storage
+         */
+        $private.saveUrls = function () {
 
-    },
-    /**
-     * Remove url from the chrome storage and from the list
-     * @param e
-     */
-    removeUrl: function (e) {
+            var children = $private.form.children;
+            var urls = [];
 
-        var button = e.target;
-        var holder = button.parentNode;
-        var input = holder.children[0];
+            for (var i = 0; i < children.length; i++) {
 
-        Options.urls.splice(Options.urls.indexOf(input.value), 1);
+                var url = children[i].children[0].value;
 
-        chrome.storage.sync.set({'TE.urls': Options.urls}, function() {
-
-            Options.form.removeChild(holder);
-
-            button.removeEventListener('click', Options.removeUrl, false);
-
-            if (Options.form.children.length === 0) {
-                Options.status.innerText = Options.emptyText;
-                Options.save.setAttribute("disabled", "disabled");
+                // check if url is empty string or if it exists
+                if (url !== '' && urls.indexOf(url) === -1) {
+                    urls.push(url);
+                }
             }
 
-        });
+            if (urls.length > 0) {
 
-    },
-    /**
-     * Create child for the url list
-     * @param url
-     * @returns {HTMLElement}
-     */
-    createChild: function (url) {
+                chrome.storage.sync.set({'TE.urls': urls}, function() {
 
-        url = (url === undefined) ? '' : url;
+                    $private.urls = urls;
+                    $private.status.innerText = "Your changes have been saved.";
+                    $private.status.className = "saved";
+                    $private.form.innerHTML = "";
+                    $private.setUrls();
 
-        var child = document.createElement('div');
-        child.className = 'input-container';
+                    setTimeout(function() {
+                        $private.status.innerText = "";
+                        $private.status.className = "";
+                    }, 3000);
 
-        var input = document.createElement('input');
-        input.type = 'url';
-        input.value = url;
-        input.setAttribute('placeholder', 'Type your url here...');
+                });
 
-        var remove = document.createElement('button');
-        remove.innerHTML = '&times;';
-        remove.className = 'remove icon-button';
+            }
 
-        remove.addEventListener('click', Options.removeUrl);
+        };
 
-        child.appendChild(input);
-        child.appendChild(remove);
+        /**
+         * Add url input holder
+         */
+        $private.addUrl = function () {
 
-        return child;
+            var child = $private.createChild();
 
-    }
-};
+            $private.form.appendChild(child);
 
-document.addEventListener('DOMContentLoaded', Options.init);
+            if ($private.form.children.length === 1) {
+                $private.status.innerText = "";
+                $private.save.removeAttribute("disabled");
+            }
+
+        };
+
+        /**
+         * Remove url from the chrome storage and from the list
+         * @param e
+         */
+        $private.removeUrl = function (e) {
+
+            var button = e.target;
+            var holder = button.parentNode;
+            var input = holder.children[0];
+
+            $private.urls.splice($private.urls.indexOf(input.value), 1);
+
+            chrome.storage.sync.set({'TE.urls': $private.urls}, function() {
+
+                $private.form.removeChild(holder);
+
+                button.removeEventListener('click', $private.removeUrl, false);
+
+                if ($private.form.children.length === 0) {
+                    $private.status.innerText = $private.emptyText;
+                    $private.save.setAttribute("disabled", "disabled");
+                }
+
+            });
+
+        };
+
+        /**
+         * Create child for the url list
+         * @param url
+         * @returns {HTMLElement}
+         */
+        $private.createChild = function (url) {
+
+            url = (url === undefined) ? '' : url;
+
+            var child = document.createElement('div');
+            child.className = 'input-container';
+
+            var input = document.createElement('input');
+            input.type = 'url';
+            input.value = url;
+            input.setAttribute('placeholder', 'Type your url here...');
+
+            var remove = document.createElement('button');
+            remove.innerHTML = '&times;';
+            remove.className = 'remove icon-button';
+
+            remove.addEventListener('click', $private.removeUrl);
+
+            child.appendChild(input);
+            child.appendChild(remove);
+
+            return child;
+
+        };
+
+        var $shared = {
+            get init() {
+                $private.init();
+            },
+            set init(value) { return false; }
+        };
+
+        return $shared;
+
+    }();
+}
+
+document.addEventListener('DOMContentLoaded', TabEater.options.init);
