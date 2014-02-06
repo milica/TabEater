@@ -1,66 +1,128 @@
 var Options = {
     init: function () {
 
-        Options.attachEvents();
+        Options.setElements();
         Options.getUrls();
 
     },
-    url: [],
-    attachEvents: function () {
+    urls: [],
+    form: '',
+    status: '',
+    save: '',
+    setElements: function () {
 
-        document.querySelector('#save').addEventListener('click', Options.saveUrls);
+        Options.form = document.getElementById("url-list");
+        Options.status = document.getElementById("status");
+        Options.save = document.querySelector("#save");
+        Options.add = document.querySelector("#add-new");
+
+        Options.save.addEventListener('click', Options.saveUrls);
+        Options.add.addEventListener('click', Options.addUrl);
 
     },
     getUrls: function () {
-        var urls = localStorage["urls"];
+        var urls = localStorage["TE.urls"];
 
         if (!urls) {
+
+            Options.status.innerText = "You don't have blacklisted urls.";
+            Options.save.setAttribute("disabled", "disabled");
+
             return;
         }
         urls = JSON.parse(urls);
 
-        var form = document.getElementById("url-list");
-
-        // build list
         for (var i = 0; i < urls.length; i++) {
 
             var url = urls[i];
 
-            var child = document.createElement('input');
-            child.type = 'text';
-            child.value = url;
+            var child = Options.createChild(url);
 
-            form.appendChild(child);
+            Options.form.appendChild(child);
         }
 
-        this.urls = urls;
+        Options.urls = urls;
 
         return urls;
     },
     saveUrls: function () {
 
-        var form = document.getElementById("url-list");
-
-        var children = form.children;
+        var children = Options.form.children;
         var length = children.length;
+        var urls = [];
 
         for (var i = 0; i < length; i++) {
 
-            var url = children[i].value;
+            var url = children[i].children[0].value;
 
-            if (url.indexOf(Options.urls) === -1) {
-                Options.urls.push(url);
+            console.log(urls.indexOf(url));
+            if (url !== '' && urls.indexOf(url) === -1) {
+                urls.push(url);
             }
         }
-        localStorage["urls"] = JSON.stringify(Options.urls);
 
-        var status = document.getElementById("status");
+        console.log(urls);
+        if (urls.length > 0) {
+            localStorage["TE.urls"] = JSON.stringify(urls);
 
-        status.innerHTML = "Options Saved.";
+            Options.urls = urls;
 
-        setTimeout(function() {
-            status.innerHTML = "";
-        }, 2000);
+            Options.status.innerText = "Options Saved.";
+
+            setTimeout(function() {
+                Options.status.innerText = "";
+            }, 2000);
+        }
+
+    },
+    addUrl: function () {
+
+        var child = Options.createChild();
+
+        Options.form.appendChild(child);
+
+        if (Options.form.children.length === 1) {
+            Options.status.innerText = "";
+            Options.save.removeAttribute("disabled");
+        }
+
+    },
+    createChild: function (url) {
+
+        url = (url === undefined) ? '' : url;
+
+        var child = document.createElement('div');
+        child.className = 'input-container';
+
+        var input = document.createElement('input');
+        input.type = 'url';
+        input.value = url;
+
+        var remove = document.createElement('button');
+        remove.innerHTML = '&times;';
+        remove.className = 'remove icon-button';
+
+        remove.addEventListener('click', Options.removeUrl);
+
+        child.appendChild(input);
+        child.appendChild(remove);
+
+        return child;
+
+    },
+    removeUrl: function (e) {
+
+        var button = e.target;
+        var holder = button.parentNode;
+
+        Options.form.removeChild(holder);
+
+        button.removeEventListener('click', Options.removeUrl, false);
+
+        if (Options.form.children.length === 0) {
+            Options.status.innerText = "You don't have blacklisted urls.";
+            Options.save.setAttribute("disabled", "disabled");
+        }
 
     }
 };
