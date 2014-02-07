@@ -177,6 +177,10 @@ button:active, button:focus {
     display: block;
 }
 
+hr {
+    margin: 40px 0 0 0;
+}
+
 /* Description */
 .description {
     font-size: 14px;
