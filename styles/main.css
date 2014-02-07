@@ -50,6 +50,14 @@ h2 {
 
 .input-container label {
     display: inline-block;
+    position: relative;
+    width: 120px;
+}
+
+.input-container label .tooltip {
+    position: absolute;
+    top: 2px;
+    right: 0px;
 }
 
 .input-container label input[type=checkbox] {
