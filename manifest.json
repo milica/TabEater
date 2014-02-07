@@ -23,7 +23,20 @@
         },
         "default_title": "TabEater"
     },
+
+    "commands": {
+        "toggle-action": {
+            "suggested_key": {
+                "default": "Ctrl+Shift+E",
+                "mac": "Command+Shift+E",
+                "linux": "Ctrl+Shift+E"
+            },
+            "description": "Send a 'toggle' event to the extension"
+        }
+    },
+
     "options_page": "options.html",
+
     "permissions": [
         "tabs",
         "storage"

@@ -15,24 +15,31 @@ if ('undefined' == typeof(TabEater.background)) {
         $private.hideTabs = function (tabs) {
             console.log(tabs);
             chrome.browserAction.setIcon({path: '../images/crazy_chicken_full.png'});
-            chrome.storage.sync.get('TE.urls', function (obj) {
-                var urls = obj["TE.urls"], url, tabsToRemove = [], tab;
-                $private.closedTabs = [];
-//
-                for (tab in tabs) {
-                    var tabUrl = tabs[tab].url.split("/")[2];
+            chrome.storage.sync.get('TE.options', function (obj) {
+                var options = obj["TE.options"];
+                var urls = (options !== undefined && options.urls !== undefined) ? options.urls : null;
 
-                    if (urls.indexOf(tabUrl) === -1) {
-                        continue;
-                    } else {
-                        tabsToRemove.push(tabs[tab].id);
-                        $private.closedTabs.push(tabs[tab]);
+                if (urls) {
+
+                    var url, tabsToRemove = [], tab;
+                    $private.closedTabs = [];
+    //
+                    for (tab in tabs) {
+                        var tabUrl = tabs[tab].url.split("/")[2];
+
+                        if (urls.indexOf(tabUrl) === -1) {
+                            continue;
+                        } else {
+                            tabsToRemove.push(tabs[tab].id);
+                            $private.closedTabs.push(tabs[tab]);
+                        }
+
                     }
+                    chrome.tabs.remove(tabsToRemove);
+                    tabsToRemove = null;
+                    urls = null;
 
                 }
-                chrome.tabs.remove(tabsToRemove);
-                tabsToRemove = null;
-                urls = null;
             })
         };
 
@@ -80,6 +87,11 @@ if ('undefined' == typeof(TabEater.background)) {
                 } else {
                     return;
                 }
+            },
+            onShortcut: function (command) {
+                if (command === "toggle-action") {
+                    $shared.onClicked();
+                }
             }
         };
 
@@ -89,3 +101,4 @@ if ('undefined' == typeof(TabEater.background)) {
 }
 
 chrome.browserAction.onClicked.addListener(TabEater.background.onClicked);
+chrome.commands.onCommand.addListener(TabEater.background.onShortcut);
