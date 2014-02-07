@@ -52,11 +52,13 @@ h2 {
     display: inline-block;
     position: relative;
     width: 120px;
+    margin-right: 20px;
+    padding: 9px 0;
 }
 
 .input-container label .tooltip {
     position: absolute;
-    top: 2px;
+    top: 10px;
     right: 0px;
 }
 
