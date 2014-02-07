@@ -105,7 +105,12 @@ if ('undefined' == typeof(TabEater.options)) {
                     }
                 }
 
-                $private.clearHistory.setAttribute('checked', (options.clearHistory !== undefined) ? options.clearHistory : false);
+                var clearHistory = (options.clearHistory !== undefined) ? options.clearHistory : false;
+                if (clearHistory === true) {
+                    $private.clearHistory.setAttribute('checked', 'checked');
+                } else {
+                    $private.clearHistory.removeAttribute('checked');
+                }
                 $private.fallback.value = (options.fallback !== undefined) ? options.fallback : '';
 
                 $private.urls = urls;
