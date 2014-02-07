@@ -152,9 +152,7 @@ if ('undefined' == typeof(TabEater.options)) {
                 $private.status.innerText = "Your changes have been saved.";
                 $private.form.innerHTML = "";
 
-                if (urls.length > 0) {
-                    $private.setUrls();
-                }
+                $private.setUrls();
 
                 setTimeout(function() {
                     $private.status.innerText = "";

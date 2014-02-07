@@ -19,13 +19,14 @@
             <div id="url-list"></div>
 
             <div class="the-rest">
-                <div class="input-container">
-                    <label>Clear history when hiding tabs <input type="checkbox" id="clear-history" /></label>
+                <div class="input-container short">
+                    <label for="fallback">Fallback URL <span class="tooltip">?<span>When all tabs are blacklisted this url is going to be loaded when hiding tabs</span></span></label>
+                    <input type="text" id="fallback" />
                 </div>
 
-                <div class="input-container short">
-                    <label>Fallback URL <span class="tooltip">?<span>When all tabs are blacklisted this url is going to be loaded when hiding tabs</span></span></label>
-                    <input type="text" id="fallback" />
+                <div class="input-container">
+                    <label for="clear-history">Clear history <span class="tooltip">?<span>Allows you to clear history when hiding tabs</span></span></label>
+                    <input type="checkbox" id="clear-history" />
                 </div>
             </div>
 
