@@ -35,6 +35,12 @@ if ('undefined' == typeof(TabEater.background)) {
                         }
 
                     }
+                    if (tabs.length === tabsToRemove.length && options.fallback !== "") {
+                        tab = {
+                            url: options.fallback
+                        };
+                        chrome.tabs.create(tab);
+                    }
                     chrome.tabs.remove(tabsToRemove);
                     tabsToRemove = null;
                     urls = null;
