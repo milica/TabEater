@@ -11,6 +11,14 @@
     <div class="container">
         <div class="opt-form">
 
+            <h2>The TabEater</h2>
+
+            <section class="description">
+                The TabEater has come to save the day! No more alt-tabbing to hide unwanted tabs, the TabEater will take
+                them away for you, and spit them back up when you need them. Just blacklist the sites you want TabEater
+                to peck away, and surf carefree.
+            </section>
+
             <h2>TabEater Blacklist</h2>
 
             <button type="button" class="green" id="add-new">ADD URL</button>
@@ -19,13 +27,19 @@
             <div id="url-list"></div>
 
             <div class="the-rest">
-                <div class="input-container">
-                    <label>Clear history when hiding tabs <input type="checkbox" id="clear-history" /></label>
+                <div class="input-container short">
+                    <label for="fallback">Fallback URL <span class="tooltip">?<span>When all tabs are blacklisted this url is going to be loaded when hiding tabs</span></span></label>
+                    <input type="text" id="fallback" />
                 </div>
 
-                <div class="input-container short">
-                    <label>Fallback URL <span class="tooltip">?<span>When all tabs are blacklisted this url is going to be loaded when hiding tabs</span></span></label>
-                    <input type="text" id="fallback" />
+                <div class="input-container">
+                    <label for="clear-history">Clear history <span class="tooltip">?<span>Allows you to clear history when hiding tabs</span></span></label>
+                    <input type="checkbox" id="clear-history" />
+                </div>
+
+                <div class="input-container">
+                    <label>Shortcut <span class="tooltip">?<span>Shortcut for hitting crazy chicken</span></span></label>
+                    <strong>CTRL/CMD + SHIFT + E</strong>
                 </div>
             </div>
 
@@ -35,6 +49,7 @@
             </div>
 
         </div>
+
 
     </div>
     <script type="text/javascript" src="scripts/options.js"></script>

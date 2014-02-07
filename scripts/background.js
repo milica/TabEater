@@ -14,6 +14,7 @@ if ('undefined' == typeof(TabEater.background)) {
 
         $private.hideTabs = function (tabs) {
             console.log(tabs);
+            chrome.browserAction.setIcon({path: '../images/crazy_chicken_full.png'});
             chrome.storage.sync.get('TE.urls', function (obj) {
                 var urls = obj["TE.urls"], url, tabsToRemove = [], tab;
                 $private.closedTabs = [];
@@ -36,6 +37,7 @@ if ('undefined' == typeof(TabEater.background)) {
         };
 
         $private.showTabs = function () {
+            chrome.browserAction.setIcon({path: '../images/crazy_chicken_hungry_19.png'});
             var tabs = $private.closedTabs, tab, index;
 
             for (index in tabs) {
