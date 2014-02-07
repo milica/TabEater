@@ -46,10 +46,22 @@ h2 {
 
 .input-container {
     margin: 10px 0;
-    overflow: auto;
 }
 
-input[type=url]{
+.input-container label {
+    display: inline-block;
+}
+
+.input-container label input[type=checkbox] {
+    margin: 0 0 0 10px;
+}
+
+.input-container.short input[type=text] {
+    width: 50%;
+}
+
+input[type=url],
+input[type=text] {
     width: 93%;
     border-radius: 3px;
     -webkit-border-radius: 3px;
@@ -60,9 +72,9 @@ input[type=url]{
     margin: 2px 0;
 }
 
-input[type=url]:hover,
-input[type=url]:focus,
-input[type=url]:active {
+input[type=url]:hover, input[type=text]:hover,
+input[type=url]:focus, input[type=text]:focus,
+input[type=url]:active, input[type=text]:active {
     outline: none;
     border: 1px solid #ccc;
 }
@@ -133,14 +145,54 @@ button:active, button:focus {
 .save-action {
     overflow: auto;
 }
-
-#status {
-    float: left;
+.note {
     padding: 20px 0;
     color: #666;
 }
-
-#status.saved {
+.note#status {
+    float: right;
     color: #076825;
+    padding: 12px 2px;
+    font-size: 14px;
+}
+
+.note#empty-list {
+    display: none;
+    margin: 20px 0;
+    padding: 20px;
+    background-color: #d0f5ff;
+}
+
+.note#empty-list.show {
+    display: block;
+}
+
+/* --- TOOLTIP --- */
+.tooltip {
+    text-align: center;
+    border-radius: 7px;
+    -webkit-border-radius: 7px;
+    width: 14px;
+    height: 14px;
+    background-color: #ccc;
+    color: #fff;
+    display: inline-block;
+    position: relative;
+    font-size: 12px;
+}
+.tooltip:hover > span {
+    display: block;
+}
+.tooltip > span {
+    display: none;
+    position: absolute;
+    top: -20px;
+    left: 18px;
     padding: 10px;
+    font-size: 13px;
+    color: #000;
+    background-color: #fff;
+    text-align: left;
+    width: 200px;
+    border: 1px solid #ccc;
 }

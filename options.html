@@ -15,11 +15,23 @@
 
             <button type="button" class="green" id="add-new">ADD URL</button>
 
+            <div id="empty-list" class="note"></div>
             <div id="url-list"></div>
 
+            <div class="the-rest">
+                <div class="input-container">
+                    <label>Clear history when hiding tabs <input type="checkbox" id="clear-history" /></label>
+                </div>
+
+                <div class="input-container short">
+                    <label>Fallback URL <span class="tooltip">?<span>When all tabs are blacklisted this url is going to be loaded when hiding tabs</span></span></label>
+                    <input type="text" id="fallback" />
+                </div>
+            </div>
+
             <div class="save-action">
-                <div id="status"></div>
                 <button type="submit" class="green" id="save">SAVE</button>
+                <div id="status" class="note"></div>
             </div>
 
         </div>

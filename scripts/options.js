@@ -41,6 +41,21 @@ if ('undefined' == typeof(TabEater.options)) {
          */
         $private.add =  '';
 
+        /**
+         * Reference to the clear history checkbox
+         */
+        $private.clearHistory = '';
+
+        /**
+         * Reference to the fallback input
+         */
+        $private.fallback = false;
+
+        /**
+         * Reference to the empty list element
+         */
+        $private.emptyList = false;
+
         $private.emptyText =  "There are not blacklisted urls. Click ADD URL button to add urls to your list.";
 
         /**
@@ -52,6 +67,9 @@ if ('undefined' == typeof(TabEater.options)) {
             $private.status = document.getElementById("status");
             $private.save = document.querySelector("#save");
             $private.add = document.querySelector("#add-new");
+            $private.clearHistory = document.querySelector('#clear-history');
+            $private.fallback = document.querySelector('#fallback');
+            $private.emptyList = document.querySelector('#empty-list');
 
             $private.save.addEventListener('click', $private.saveUrls);
             $private.add.addEventListener('click', $private.addUrl);
@@ -65,24 +83,30 @@ if ('undefined' == typeof(TabEater.options)) {
          */
         $private.setUrls = function () {
 
-            chrome.storage.sync.get('TE.urls', function(obj) {
+            chrome.storage.sync.get('TE.options', function(obj) {
 
-                var urls = obj["TE.urls"];
+                var options = obj["TE.options"];
+                var urls = (options !== undefined && options.urls !== undefined) ? options.urls : null;
 
                 if (!urls || urls.length === 0) {
 
-                    $private.status.innerText = $private.emptyText;
-                    $private.save.setAttribute("disabled", "disabled");
+                    $private.emptyList.innerText = $private.emptyText;
+                    $private.emptyList.classList.add('show');
 
-                    return;
+                } else {
+
+                    $private.emptyList.classList.remove('show');
+
+                    for (var i = 0; i < urls.length; i++) {
+
+                        var child = $private.createChild(urls[i]);
+
+                        $private.form.appendChild(child);
+                    }
                 }
 
-                for (var i = 0; i < urls.length; i++) {
-
-                    var child = $private.createChild(urls[i]);
-
-                    $private.form.appendChild(child);
-                }
+                $private.clearHistory.setAttribute('checked', (options.clearHistory !== undefined) ? options.clearHistory : false);
+                $private.fallback.value = (options.fallback !== undefined) ? options.fallback : '';
 
                 $private.urls = urls;
 
@@ -112,30 +136,32 @@ if ('undefined' == typeof(TabEater.options)) {
 
                 var url = children[i].children[0].value;
 
-                // check if url is empty string or if it exists
+                // check if url is empty string or if it exists in the list already
                 if (url !== '' && urls.indexOf(url) === -1) {
                     urls.push(url);
                 }
             }
 
-            if (urls.length > 0) {
+            var clearHistory = $private.clearHistory.checked;
+            var fallback = $private.fallback.value;
 
-                chrome.storage.sync.set({'TE.urls': urls}, function() {
 
-                    $private.urls = urls;
-                    $private.status.innerText = "Your changes have been saved.";
-                    $private.status.className = "saved";
-                    $private.form.innerHTML = "";
+            chrome.storage.sync.set({'TE.options': {urls: urls, clearHistory: clearHistory, fallback: fallback}}, function() {
+
+                $private.urls = urls;
+                $private.status.innerText = "Your changes have been saved.";
+                $private.form.innerHTML = "";
+
+                if (urls.length > 0) {
                     $private.setUrls();
+                }
 
-                    setTimeout(function() {
-                        $private.status.innerText = "";
-                        $private.status.className = "";
-                    }, 3000);
+                setTimeout(function() {
+                    $private.status.innerText = "";
+                }, 3000);
 
-                });
+            });
 
-            }
 
         };
 
@@ -148,9 +174,11 @@ if ('undefined' == typeof(TabEater.options)) {
 
             $private.form.appendChild(child);
 
+            $private.form.children[$private.form.children.length-1].children[0].focus();
+
             if ($private.form.children.length === 1) {
-                $private.status.innerText = "";
-                $private.save.removeAttribute("disabled");
+                $private.emptyList.innerText = "";
+                $private.emptyList.classList.remove('show');
             }
 
         };
@@ -167,15 +195,20 @@ if ('undefined' == typeof(TabEater.options)) {
 
             $private.urls.splice($private.urls.indexOf(input.value), 1);
 
-            chrome.storage.sync.set({'TE.urls': $private.urls}, function() {
+            var clearHistory = $private.clearHistory.checked;
+            var fallback = $private.fallback.value;
+
+            chrome.storage.sync.set({'TE.options': {urls: $private.urls, clearHistory: clearHistory, fallback: fallback}}, function() {
 
                 $private.form.removeChild(holder);
 
                 button.removeEventListener('click', $private.removeUrl, false);
 
                 if ($private.form.children.length === 0) {
-                    $private.status.innerText = $private.emptyText;
-                    $private.save.setAttribute("disabled", "disabled");
+                    $private.emptyList.innerText = $private.emptyText;
+                    $private.emptyList.classList.add('show');
+                } else {
+                    $private.emptyList.classList.remove('show');
                 }
 
             });
