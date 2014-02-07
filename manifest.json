@@ -10,8 +10,17 @@
     "description": "The extension that eats tabs :)",
     "version": "1.0",
 
+    "icons": {
+        "48": "images/crazy_chicken_hungry_48.png"
+    },
+
     "browser_action": {
-        "default_icon": "images/crazy_chicken_full.png",
+        "default_icon": {
+            "19": "images/crazy_chicken_hungry_19.png",
+            "38": "images/crazy_chicken_hungry_38.png",
+            "48": "images/crazy_chicken_hungry_48.png",
+            "128": "images/crazy_chicken_hungry_128.png"
+        },
         "default_title": "TabEater"
     },
     "options_page": "options.html",
