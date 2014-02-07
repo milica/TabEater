@@ -78,6 +78,11 @@ if ('undefined' == typeof(TabEater.background)) {
                 } else {
                     return;
                 }
+            },
+            onShortcut: function (command) {
+                if (command === "toggle-action") {
+                    $shared.onClicked();
+                }
             }
         };
 
@@ -87,3 +92,4 @@ if ('undefined' == typeof(TabEater.background)) {
 }
 
 chrome.browserAction.onClicked.addListener(TabEater.background.onClicked);
+chrome.commands.onCommand.addListener(TabEater.background.onShortcut);
