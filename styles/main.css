@@ -70,7 +70,7 @@ h2 {
 
 input[type=url],
 input[type=text] {
-    width: 93%;
+    width: 90%;
     border-radius: 3px;
     -webkit-border-radius: 3px;
     border: 1px solid #ddd;
@@ -173,6 +173,19 @@ button:active, button:focus {
 
 .note#empty-list.show {
     display: block;
+}
+
+/* Description */
+.description {
+    font-size: 14px;
+    color: #696969;
+    width: 85%;
+    margin: 10px auto 30px auto;
+    min-height: 150px;
+    padding: 15px 15px 15px 150px;
+    line-height: 25px;
+    box-shadow: 0 0 10px 1px #ccc;
+    background: url('../images/crazy_chicken_hungry_128.png') no-repeat 3px 10px;
 }
 
 /* --- TOOLTIP --- */
