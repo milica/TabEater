@@ -136,30 +136,6 @@ button:active, button:focus {
     margin-left: 5px;
 }
 
-#save {
-    float: right;
-    padding: 10px 20px;
-    font-size: 14px;
-}
-
-.save-action {
-    overflow: auto;
-}
-.note {
-    padding: 20px 0;
-    color: #666;
-}
-.note#status {
-    float: right;
-    color: #076825;
-    padding: 12px 2px;
-    font-size: 14px;
-}
-
-hr {
-    margin: 40px 0 0 0;
-}
-
 /* Description */
 .description {
     font-size: 14px;

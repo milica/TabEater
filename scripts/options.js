@@ -27,16 +27,6 @@ if ('undefined' == typeof(TabEater.options)) {
         $private.form = '';
 
         /**
-         * Reference to the status element
-         */
-        $private.status =  '';
-
-        /**
-         * Reference to the save button
-         */
-        $private.save =  '';
-
-        /**
          * Reference to the clear history checkbox
          */
         $private.clearHistory = '';
@@ -57,12 +47,12 @@ if ('undefined' == typeof(TabEater.options)) {
         $private.prepareElements = function () {
 
             $private.form = document.getElementById("url-list");
-            $private.status = document.getElementById("status");
-            $private.save = document.querySelector("#save");
             $private.clearHistory = document.querySelector('#clear-history');
             $private.fallback = document.querySelector('#fallback');
 
-            $private.save.addEventListener('click', $private.saveUrls);
+            $private.fallback.addEventListener('input', $private.saveOtherOptions);
+            // TODO  see if we need this
+            // $private.clearHistory.addEventListener('change', $private.saveOtherOptions);
 
         };
 
@@ -114,12 +104,15 @@ if ('undefined' == typeof(TabEater.options)) {
 
                 $private.clearAndFocusAddInput();
 
+                /*
                 var clearHistory = (options !== undefined && options.clearHistory !== undefined) ? options.clearHistory : false;
                 if (clearHistory === true) {
                     $private.clearHistory.setAttribute('checked', 'checked');
                 } else {
                     $private.clearHistory.removeAttribute('checked');
                 }
+                */
+
                 $private.fallback.value = (options !== undefined && options.fallback !== undefined) ? options.fallback : '';
 
                 $private.urls = urls;
@@ -139,41 +132,31 @@ if ('undefined' == typeof(TabEater.options)) {
         };
 
         /**
-         * Save urls into chrome storage
+         * Save other options when changed (fallback url and clearHistory)
          */
-        $private.saveUrls = function () {
+        $private.saveOtherOptions = function () {
 
-            var children = $private.form.children;
-            var urls = [];
-
-            for (var i = 0; i < children.length; i++) {
-
-                var url = children[i].children[0].value;
-
-                // check if url is empty string or if it exists in the list already
-                if (url !== '' && urls.indexOf(url) === -1) {
-                    urls.push(url);
-                }
+            if ($private.disabled) {
+                return;
             }
 
-            var clearHistory = $private.clearHistory.checked;
-            var fallback = $private.fallback.value;
+            $private.disabled = true;
 
+            chrome.storage.sync.set({
+                'TE.options': {
+                    urls: $private.urls,
+                    // clearHistory: $private.clearHistory.checked,
+                    fallback: $private.fallback.value
+                }
+            }, function () {
+                if ($private.timeoutId) {
+                    clearTimeout($private.timeoutId);
+                }
 
-            chrome.storage.sync.set({'TE.options': {urls: urls, clearHistory: clearHistory, fallback: fallback}}, function() {
-
-                $private.urls = urls;
-                $private.status.innerText = "Your changes have been saved.";
-                $private.form.innerHTML = "";
-
-                $private.setUrls();
-
-                setTimeout(function() {
-                    $private.status.innerText = "";
-                }, 3000);
-
-            });
-
+                $private.timeoutId = setTimeout(function() {
+                    $private.disabled = false;
+                }, 300);
+            })
 
         };
 
@@ -198,20 +181,26 @@ if ('undefined' == typeof(TabEater.options)) {
                 urls.push(url);
             }
 
-            var clearHistory = $private.clearHistory.checked;
+            // var clearHistory = $private.clearHistory.checked;
             var fallback = $private.fallback.value;
 
-            chrome.storage.sync.set({'TE.options': {urls: urls, clearHistory: clearHistory, fallback: fallback}}, function () {
+            chrome.storage.sync.set({
+                'TE.options': {
+                    urls: urls,
+                    // clearHistory: clearHistory,
+                    fallback: fallback
+                }
+            }, function () {
 
-                var child = $private.createChild(url);
+                var child = $private.createChild(url)
 
-                $private.form.insertBefore(child, $private.addInput.parentNode);
+                $private.form.insertBefore(child, $private.addInput.parentNode)
 
-                $private.clearAndFocusAddInput();
+                $private.clearAndFocusAddInput()
 
-                $private.urls = urls;
+                $private.urls = urls
 
-            });
+            })
 
         };
 
@@ -231,15 +220,21 @@ if ('undefined' == typeof(TabEater.options)) {
 
             $private.urls.splice($private.urls.indexOf(input.value), 1);
 
-            var clearHistory = $private.clearHistory.checked;
+            // var clearHistory = $private.clearHistory.checked;
             var fallback = $private.fallback.value;
 
-            chrome.storage.sync.set({'TE.options': {urls: $private.urls, clearHistory: clearHistory, fallback: fallback}}, function() {
+            chrome.storage.sync.set({
+                'TE.options': {
+                    urls: $private.urls,
+                    // clearHistory: clearHistory,
+                    fallback: fallback
+                }
+            }, function () {
 
-                $private.form.removeChild(holder);
+                $private.form.removeChild(holder)
 
-                button.removeEventListener('click', $private.removeUrl, false);
-            });
+                button.removeEventListener('click', $private.removeUrl, false)
+            })
 
         };
 
