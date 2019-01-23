@@ -155,7 +155,7 @@ if ('undefined' == typeof(TabEater.options)) {
 
                 $private.timeoutId = setTimeout(function() {
                     $private.disabled = false;
-                }, 300);
+                }, 100);
             })
 
         };
@@ -205,6 +205,44 @@ if ('undefined' == typeof(TabEater.options)) {
         };
 
         /**
+         * Updates particular url on change
+         *
+         * @param e
+         */
+        $private.updateUrl = function (e) {
+
+            if ($private.disabled) {
+                return;
+            }
+
+            $private.disabled = true;
+
+            var input = e.target;
+            var newValue = input.value;
+            var index = $private.urls.indexOf(input.dataset.prev);
+
+            $private.urls.splice(index, 1, newValue);
+            input.dataset.prev = newValue;
+
+            chrome.storage.sync.set({
+                'TE.options': {
+                    urls: $private.urls,
+                    // clearHistory: $private.clearHistory.checked,
+                    fallback: $private.fallback.value
+                }
+            }, function () {
+                if ($private.timeoutId) {
+                    clearTimeout($private.timeoutId);
+                }
+
+                $private.timeoutId = setTimeout(function() {
+                    $private.disabled = false;
+                }, 100);
+            })
+
+        };
+
+        /**
          * Remove url from the chrome storage and from the list
          * @param e
          */
@@ -234,6 +272,7 @@ if ('undefined' == typeof(TabEater.options)) {
                 $private.form.removeChild(holder)
 
                 button.removeEventListener('click', $private.removeUrl, false)
+                input.removeEventListener('keyup', $private.updateUrl, false);
             })
 
         };
@@ -255,7 +294,11 @@ if ('undefined' == typeof(TabEater.options)) {
             input.value = url;
             input.setAttribute('placeholder', 'Type your url here...');
 
-            if (!url) {
+
+            if (url) {
+                input.dataset.prev = url;
+                input.addEventListener('keyup', $private.updateUrl);
+            } else {
                 input.addEventListener('keyup', $private.saveUrl);
 
                 $private.addInput = input;
