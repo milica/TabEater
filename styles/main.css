@@ -89,6 +89,22 @@ input[type=url]:active, input[type=text]:active {
     border: 1px solid #ccc;
 }
 
+input.error {
+    border-color: #dd5e57 !important;
+}
+
+.error-info {
+    display: block;
+    visibility: hidden;
+    font-style: normal;
+    color: #dd5e57;
+    margin-left: 143px;
+}
+
+input.error + .error-info {
+    visibility: visible;
+}
+
 /* buttons */
 button {
     font-family: Arial, verdana, tahoma, sans-serif;

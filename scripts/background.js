@@ -1,10 +1,10 @@
 'use strict';
 
-if ('undefined' == typeof(TabEater)) {
+if ('undefined' === typeof(TabEater)) {
     var TabEater = {};
 }
 
-if ('undefined' == typeof(TabEater.background)) {
+if ('undefined' === typeof(TabEater.background)) {
     TabEater.background = function () {
         var $private = {
             hidden: false,
@@ -13,23 +13,23 @@ if ('undefined' == typeof(TabEater.background)) {
         };
 
         $private.hideTabs = function (tabs) {
-            console.log(tabs);
             chrome.browserAction.setIcon({path: '../images/crazy_chicken_full.png'});
             chrome.storage.sync.get('TE.options', function (obj) {
                 var options = obj["TE.options"];
                 var urls = (options !== undefined && options.urls !== undefined) ? options.urls : null;
+                var hasProtocol = /^http:\/\//.test(options.fallback) || /^https:\/\//.test(options.fallback);
 
                 if (urls) {
 
-                    var url, tabsToRemove = [], tab;
+                    var tabsToRemove = [], tab;
                     $private.closedTabs = [];
-    //
+
                     for (tab in tabs) {
                         var tabUrl = tabs[tab].url.split("/")[2];
 
-                        if (urls.indexOf(tabUrl) === -1) {
-                            continue;
-                        } else {
+                        if (urls.indexOf(tabUrl) !== -1 ||
+                            urls.indexOf('http://' + tabUrl) !== -1 ||
+                            urls.indexOf('https://' + tabUrl) !== -1) {
                             tabsToRemove.push(tabs[tab].id);
                             $private.closedTabs.push(tabs[tab]);
                         }
@@ -37,7 +37,7 @@ if ('undefined' == typeof(TabEater.background)) {
                     }
                     if (tabs.length === tabsToRemove.length && options.fallback !== "") {
                         tab = {
-                            url: options.fallback
+                            url: (hasProtocol ? '' : 'http://') + options.fallback;
                         };
                         chrome.tabs.create(tab);
                     }
@@ -66,7 +66,7 @@ if ('undefined' == typeof(TabEater.background)) {
 
         $private.toggle = function () {
 
-            if (this.hidden == false) {
+            if (!this.hidden) {
 
                 console.log("BOSS, HIDE!");
                 chrome.tabs.query({

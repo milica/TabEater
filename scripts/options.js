@@ -1,10 +1,10 @@
 'use strict';
 
-if ('undefined' == typeof(TabEater)) {
+if ('undefined' === typeof(TabEater)) {
     var TabEater = {};
 }
 
-if ('undefined' == typeof(TabEater.options)) {
+if ('undefined' === typeof(TabEater.options)) {
     TabEater.options = function() {
 
         var $private = {};
@@ -140,6 +140,15 @@ if ('undefined' == typeof(TabEater.options)) {
                 return;
             }
 
+            var fallbackUrl = $private.fallback.value;
+            var hasProtocol = /^http:\/\//.test(fallbackUrl) || /^https:\/\//.test(fallbackUrl);
+
+            if (!hasProtocol) {
+                $private.fallback.classList.add('error');
+                return;
+            }
+
+            $private.fallback.classList.remove('error');
             $private.disabled = true;
 
             chrome.storage.sync.set({
@@ -272,7 +281,7 @@ if ('undefined' == typeof(TabEater.options)) {
                 $private.form.removeChild(holder)
 
                 button.removeEventListener('click', $private.removeUrl, false)
-                input.removeEventListener('keyup', $private.updateUrl, false);
+                input.removeEventListener('input', $private.updateUrl, false);
             })
 
         };
@@ -297,7 +306,7 @@ if ('undefined' == typeof(TabEater.options)) {
 
             if (url) {
                 input.dataset.prev = url;
-                input.addEventListener('keyup', $private.updateUrl);
+                input.addEventListener('input', $private.updateUrl);
             } else {
                 input.addEventListener('keyup', $private.saveUrl);
 
