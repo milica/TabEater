@@ -141,9 +141,9 @@ if ('undefined' === typeof(TabEater.options)) {
             }
 
             var fallbackUrl = $private.fallback.value;
-            var hasProtocol = /^http:\/\//.test(fallbackUrl) || /^https:\/\//.test(fallbackUrl);
+            var hasProtocol = (/^http:\/\//.test(fallbackUrl) || /^https:\/\//.test(fallbackUrl));
 
-            if (!hasProtocol) {
+            if (fallbackUrl && !hasProtocol) {
                 $private.fallback.classList.add('error');
                 return;
             }
