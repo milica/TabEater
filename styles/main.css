@@ -14,7 +14,7 @@ body {
 .container {
     font-family: Arial, verdana, tahoma, sans-serif;
     margin: 0 auto;
-    padding: 10px;
+    padding:  10px;
     width: 80%;
     max-width: 850px;
     background-color: #fff;
@@ -30,7 +30,7 @@ h2 {
 
 /* form containers */
 .opt-form {
-    padding: 10px;
+    padding: 10px 10px 20px;
     background-color: #ffffff;
     overflow: hidden;
 }
@@ -89,6 +89,22 @@ input[type=url]:active, input[type=text]:active {
     border: 1px solid #ccc;
 }
 
+input.error {
+    border-color: #dd5e57 !important;
+}
+
+.error-info {
+    display: block;
+    visibility: hidden;
+    font-style: normal;
+    color: #dd5e57;
+    margin-left: 143px;
+}
+
+input.error + .error-info {
+    visibility: visible;
+}
+
 /* buttons */
 button {
     font-family: Arial, verdana, tahoma, sans-serif;
@@ -107,13 +123,16 @@ button:active, button:focus {
     outline: none;
 }
 
+.add,
 .remove {
     float: right;
     padding: 8px 15px;
-    background-color: #dd5e57;
     color: #eee;
 }
 
+.remove {
+    background-color: #dd5e57;
+}
 .remove:hover {
     background-color: #c06052;
 }
@@ -131,54 +150,6 @@ button:active, button:focus {
     font-weight: bold;
     font-size: 18px;
     margin-left: 5px;
-}
-
-#add-new {
-    position: relative;
-    padding-left: 35px;
-}
-
-#add-new:before {
-    content: "\2b";
-    font-size: 30px;
-    position: absolute;
-    top: 0px;
-    left: 10px;
-}
-
-#save {
-    float: right;
-    padding: 10px 20px;
-    font-size: 14px;
-}
-
-.save-action {
-    overflow: auto;
-}
-.note {
-    padding: 20px 0;
-    color: #666;
-}
-.note#status {
-    float: right;
-    color: #076825;
-    padding: 12px 2px;
-    font-size: 14px;
-}
-
-.note#empty-list {
-    display: none;
-    margin: 20px 0;
-    padding: 20px;
-    background-color: #d0f5ff;
-}
-
-.note#empty-list.show {
-    display: block;
-}
-
-hr {
-    margin: 40px 0 0 0;
 }
 
 /* Description */
@@ -220,6 +191,6 @@ hr {
     color: #000;
     background-color: #fff;
     text-align: left;
-    width: 200px;
+    width: 250px;
     border: 1px solid #ccc;
 }

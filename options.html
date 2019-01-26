@@ -11,47 +11,37 @@
     <div class="container">
         <div class="opt-form">
 
-            <h2>The TabEater</h2>
-
             <section class="description">
                 The TabEater has come to save the day! No more alt-tabbing to hide unwanted tabs, the TabEater will take
                 them away for you, and spit them back up when you need them. Just blacklist the sites you want TabEater
                 to peck away, and surf carefree.
             </section>
 
-            <h2>TabEater Blacklist</h2>
+            <h2>Blacklist</h2>
 
-            <button type="button" class="green" id="add-new">ADD URL</button>
-
-            <div id="empty-list" class="note"></div>
             <div id="url-list"></div>
-
-            <hr/>
 
             <h2>Other Options</h2>
 
             <div class="the-rest">
                 <div class="input-container short">
-                    <label for="fallback">Fallback URL <span class="tooltip">?<span>When all tabs are blacklisted this url is going to be loaded when hiding tabs</span></span></label>
+                    <label for="fallback">Fallback URL <span class="tooltip">?<span>When all tabs are blacklisted this url is going to be loaded when hiding tabs. You need to define protocol as well (http:// or https://)</span></span></label>
                     <input type="text" id="fallback" />
+                    <i class="error-info">Please provide protocol, http:// or https:// at the beginning of the url</i>
                 </div>
 
+                <!-- TODO see if we need this
                 <div class="input-container">
                     <label for="clear-history">Clear history <span class="tooltip">?<span>Allows you to clear history when hiding tabs</span></span></label>
                     <input type="checkbox" id="clear-history" />
                 </div>
+                -->
 
                 <div class="input-container">
-                    <label>Shortcut <span class="tooltip">?<span>Shortcut for hitting crazy chicken</span></span></label>
+                    <label>Shortcut <span class="tooltip">?<span>Shortcut for hitting crazy chicken! If shortcut doesn't work then define it in chrome://extensions/shortcuts</span></span></label>
                     <strong>CTRL/CMD + SHIFT + E</strong>
                 </div>
             </div>
-
-            <div class="save-action">
-                <button type="submit" class="green" id="save">SAVE</button>
-                <div id="status" class="note"></div>
-            </div>
-
         </div>
 
 

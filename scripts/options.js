@@ -1,10 +1,10 @@
 'use strict';
 
-if ('undefined' == typeof(TabEater)) {
+if ('undefined' === typeof(TabEater)) {
     var TabEater = {};
 }
 
-if ('undefined' == typeof(TabEater.options)) {
+if ('undefined' === typeof(TabEater.options)) {
     TabEater.options = function() {
 
         var $private = {};
@@ -27,21 +27,6 @@ if ('undefined' == typeof(TabEater.options)) {
         $private.form = '';
 
         /**
-         * Reference to the status element
-         */
-        $private.status =  '';
-
-        /**
-         * Reference to the save button
-         */
-        $private.save =  '';
-
-        /**
-         * Reference to the add button
-         */
-        $private.add =  '';
-
-        /**
          * Reference to the clear history checkbox
          */
         $private.clearHistory = '';
@@ -52,11 +37,9 @@ if ('undefined' == typeof(TabEater.options)) {
         $private.fallback = false;
 
         /**
-         * Reference to the empty list element
+         * Reference to the add input element
          */
-        $private.emptyList = false;
-
-        $private.emptyText =  "There are not blacklisted urls. Click ADD URL button to add urls to your list.";
+        $private.addInput = null;
 
         /**
          * Prepare elements for interaction
@@ -64,17 +47,35 @@ if ('undefined' == typeof(TabEater.options)) {
         $private.prepareElements = function () {
 
             $private.form = document.getElementById("url-list");
-            $private.status = document.getElementById("status");
-            $private.save = document.querySelector("#save");
-            $private.add = document.querySelector("#add-new");
             $private.clearHistory = document.querySelector('#clear-history');
             $private.fallback = document.querySelector('#fallback');
-            $private.emptyList = document.querySelector('#empty-list');
 
-            $private.save.addEventListener('click', $private.saveUrls);
-            $private.add.addEventListener('click', $private.addUrl);
+            $private.fallback.addEventListener('input', $private.saveOtherOptions);
+            // TODO  see if we need this
+            // $private.clearHistory.addEventListener('change', $private.saveOtherOptions);
 
         };
+
+        /**
+         * Create empty add input
+         */
+        $private.createAddInput = function () {
+
+            var addInput = $private.createChild();
+
+            $private.form.appendChild(addInput);
+
+        }
+
+        /**
+         * Cleare add input to be used for another url
+         */
+        $private.clearAndFocusAddInput = function () {
+
+            $private.addInput.value = '';
+            $private.addInput.focus();
+
+        }
 
         /**
          * Get urls form chrome storage and generate HTML structure
@@ -86,17 +87,9 @@ if ('undefined' == typeof(TabEater.options)) {
             chrome.storage.sync.get('TE.options', function(obj) {
 
                 var options = obj["TE.options"];
-                var urls = (options !== undefined && options.urls !== undefined) ? options.urls : null;
+                var urls = (options !== undefined && options.urls !== undefined) ? options.urls : [];
 
-                if (!urls || urls.length === 0) {
-
-                    $private.emptyList.innerText = $private.emptyText;
-                    $private.emptyList.classList.add('show');
-
-                } else {
-
-                    $private.emptyList.classList.remove('show');
-
+                if (urls.length) {
                     for (var i = 0; i < urls.length; i++) {
 
                         var child = $private.createChild(urls[i]);
@@ -105,12 +98,21 @@ if ('undefined' == typeof(TabEater.options)) {
                     }
                 }
 
+                if (!$private.urls.length) {
+                    $private.createAddInput();
+                }
+
+                $private.clearAndFocusAddInput();
+
+                /*
                 var clearHistory = (options !== undefined && options.clearHistory !== undefined) ? options.clearHistory : false;
                 if (clearHistory === true) {
                     $private.clearHistory.setAttribute('checked', 'checked');
                 } else {
                     $private.clearHistory.removeAttribute('checked');
                 }
+                */
+
                 $private.fallback.value = (options !== undefined && options.fallback !== undefined) ? options.fallback : '';
 
                 $private.urls = urls;
@@ -130,59 +132,122 @@ if ('undefined' == typeof(TabEater.options)) {
         };
 
         /**
-         * Save urls into chrome storage
+         * Save other options when changed (fallback url and clearHistory)
          */
-        $private.saveUrls = function () {
+        $private.saveOtherOptions = function () {
 
-            var children = $private.form.children;
-            var urls = [];
-
-            for (var i = 0; i < children.length; i++) {
-
-                var url = children[i].children[0].value;
-
-                // check if url is empty string or if it exists in the list already
-                if (url !== '' && urls.indexOf(url) === -1) {
-                    urls.push(url);
-                }
+            if ($private.disabled) {
+                return;
             }
 
-            var clearHistory = $private.clearHistory.checked;
-            var fallback = $private.fallback.value;
+            var fallbackUrl = $private.fallback.value;
+            var hasProtocol = (/^http:\/\//.test(fallbackUrl) || /^https:\/\//.test(fallbackUrl));
 
+            if (fallbackUrl && !hasProtocol) {
+                $private.fallback.classList.add('error');
+                return;
+            }
 
-            chrome.storage.sync.set({'TE.options': {urls: urls, clearHistory: clearHistory, fallback: fallback}}, function() {
+            $private.fallback.classList.remove('error');
+            $private.disabled = true;
 
-                $private.urls = urls;
-                $private.status.innerText = "Your changes have been saved.";
-                $private.form.innerHTML = "";
+            chrome.storage.sync.set({
+                'TE.options': {
+                    urls: $private.urls,
+                    // clearHistory: $private.clearHistory.checked,
+                    fallback: $private.fallback.value
+                }
+            }, function () {
+                if ($private.timeoutId) {
+                    clearTimeout($private.timeoutId);
+                }
 
-                $private.setUrls();
-
-                setTimeout(function() {
-                    $private.status.innerText = "";
-                }, 3000);
-
-            });
-
+                $private.timeoutId = setTimeout(function() {
+                    $private.disabled = false;
+                }, 100);
+            })
 
         };
 
         /**
-         * Add url input holder
+         * Save new url into chrome storage
          */
-        $private.addUrl = function () {
+        $private.saveUrl = function (e) {
 
-            var child = $private.createChild();
-
-            $private.form.appendChild(child);
-
-            $private.form.children[$private.form.children.length-1].children[0].focus();
-
-            if ($private.form.children.length === 1) {
-                $private.emptyList.innerText = "";
-                $private.emptyList.classList.remove('show');
+            if (e.which !== 1 && e.which !== 13) {
+                return;
             }
+
+            var url = $private.addInput && $private.addInput.value ? $private.addInput.value : '';
+            var urls = $private.urls.slice();
+
+            if (!url) {
+                return;
+            }
+
+            // check if url exists in the list already
+            if (urls.indexOf(url) === -1) {
+                urls.push(url);
+            }
+
+            // var clearHistory = $private.clearHistory.checked;
+            var fallback = $private.fallback.value;
+
+            chrome.storage.sync.set({
+                'TE.options': {
+                    urls: urls,
+                    // clearHistory: clearHistory,
+                    fallback: fallback
+                }
+            }, function () {
+
+                var child = $private.createChild(url)
+
+                $private.form.insertBefore(child, $private.addInput.parentNode)
+
+                $private.clearAndFocusAddInput()
+
+                $private.urls = urls
+
+            })
+
+        };
+
+        /**
+         * Updates particular url on change
+         *
+         * @param e
+         */
+        $private.updateUrl = function (e) {
+
+            if ($private.disabled) {
+                return;
+            }
+
+            $private.disabled = true;
+
+            var input = e.target;
+            var newValue = input.value;
+            var index = $private.urls.indexOf(input.dataset.prev);
+
+            $private.urls.splice(index, 1, newValue);
+            input.dataset.prev = newValue;
+
+            chrome.storage.sync.set({
+                'TE.options': {
+                    urls: $private.urls,
+                    // clearHistory: $private.clearHistory.checked,
+                    fallback: $private.fallback.value
+                }
+            }, function () {
+                if ($private.timeoutId) {
+                    clearTimeout($private.timeoutId);
+                }
+
+                $private.timeoutId = setTimeout(function() {
+                    $private.disabled = false;
+                }, 100);
+            })
 
         };
 
@@ -196,25 +261,28 @@ if ('undefined' == typeof(TabEater.options)) {
             var holder = button.parentNode;
             var input = holder.children[0];
 
+            if (!$private.urls.length) {
+                return;
+            }
+
             $private.urls.splice($private.urls.indexOf(input.value), 1);
 
-            var clearHistory = $private.clearHistory.checked;
+            // var clearHistory = $private.clearHistory.checked;
             var fallback = $private.fallback.value;
 
-            chrome.storage.sync.set({'TE.options': {urls: $private.urls, clearHistory: clearHistory, fallback: fallback}}, function() {
-
-                $private.form.removeChild(holder);
-
-                button.removeEventListener('click', $private.removeUrl, false);
-
-                if ($private.form.children.length === 0) {
-                    $private.emptyList.innerText = $private.emptyText;
-                    $private.emptyList.classList.add('show');
-                } else {
-                    $private.emptyList.classList.remove('show');
+            chrome.storage.sync.set({
+                'TE.options': {
+                    urls: $private.urls,
+                    // clearHistory: clearHistory,
+                    fallback: fallback
                 }
+            }, function () {
 
-            });
+                $private.form.removeChild(holder)
+
+                button.removeEventListener('click', $private.removeUrl, false)
+                input.removeEventListener('input', $private.updateUrl, false);
+            })
 
         };
 
@@ -235,14 +303,35 @@ if ('undefined' == typeof(TabEater.options)) {
             input.value = url;
             input.setAttribute('placeholder', 'Type your url here...');
 
-            var remove = document.createElement('button');
-            remove.innerHTML = '&times;';
-            remove.className = 'remove icon-button';
 
-            remove.addEventListener('click', $private.removeUrl);
+            if (url) {
+                input.dataset.prev = url;
+                input.addEventListener('input', $private.updateUrl);
+            } else {
+                input.addEventListener('keyup', $private.saveUrl);
+
+                $private.addInput = input;
+            }
 
             child.appendChild(input);
-            child.appendChild(remove);
+
+            if (url) {
+                var remove = document.createElement('button');
+                remove.innerHTML = '&times;';
+                remove.className = 'remove icon-button';
+
+                remove.addEventListener('click', $private.removeUrl);
+
+                child.appendChild(remove);
+            } else {
+                var add = document.createElement('button');
+                add.innerHTML = '+';
+                add.className = 'add icon-button green';
+
+                add.addEventListener('click', $private.saveUrl);
+
+                child.appendChild(add);
+            }
 
             return child;
 
