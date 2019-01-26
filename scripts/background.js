@@ -37,7 +37,7 @@ if ('undefined' === typeof(TabEater.background)) {
                     }
                     if (tabs.length === tabsToRemove.length && options.fallback !== "") {
                         tab = {
-                            url: (hasProtocol ? '' : 'http://') + options.fallback;
+                            url: (hasProtocol ? '' : 'http://') + options.fallback
                         };
                         chrome.tabs.create(tab);
                     }
